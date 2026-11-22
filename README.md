@@ -1,1 +1,43 @@
-# 5578demo
+# Release Integrity Lab
+
+A browser demo for the COMP5578 Option 2 presentation on runtime resource integrity in the NIKKE PC launcher case.
+
+## Present the demo
+
+1. Run **T1 / Normal release**. The publisher signature passes and all four files match.
+2. Use **Next scenario** and run **T3-A / Files changed**. The download host stays the same and the request audit reports zero alerts. Four differences block loading.
+3. Run **T3-B / Manifest replaced**. The replacement manifest matches the changed files, but its signature fails against the pinned publisher key. The launcher stops before resource comparison.
+
+The site opens in English. Use the **中文** button or add `?lang=zh` to switch languages. Add `?case=t3-a` or `?case=t3-b` to select a scenario directly. Expand **Distribution and audit experiments** for the M4 two-node check and D3 missing-record examples.
+
+## Run locally
+
+With Node.js 22 or later, run:
+
+```sh
+npm run dev
+npm test
+npm run offline
+```
+
+The local server listens at `http://127.0.0.1:4173/`. The offline command generates `dist/5578-integrity-demo.html`. Open that file in a current Edge or Chrome browser for the classroom backup.
+
+## Methods and scope
+
+- **D1** verifies the exact manifest bytes using ECDSA P-256 and a pinned public key. It computes SHA-256 over the staged resource bytes. Loading the harmless preview requires a trusted signature and an exact match for every listed file.
+- **D2** audits synthetic request entries against a demo host allowlist. It illustrates the scope of request logs.
+- **D3** computes a hash chain and compares a shortened copy with a checkpoint held separately from the records inside the model.
+- **M4** checks both simulated nodes independently against the signed release. Their matching responses still differ from the trusted baseline.
+
+The launcher, CDN and events are simulations. The fixtures contain harmless text. Browser cryptography actually runs. The demonstration's trust model assumes the verifier and its pinned key are obtained through a trusted channel. Production rollout also requires approved versions and expiry rules, key rotation and a secure per-release pipeline. Generate fresh classroom fixtures with `node scripts/fixtures.mjs`. The generator discards both demo private keys after signing.
+
+## Deployment
+
+Import this Git repository into Vercel or run `vercel deploy --prod` with a signed-in CLI. The project serves the static files in `public/` and needs no environment variables or database.
+
+## References
+
+- [Bitdefender Labs incident analysis](https://www.bitdefender.com/en-gb/blog/labs/nikke-game-launcher-malware)
+- [MotherSphere incident timeline and analysis](https://gist.github.com/MotherSphere/d6c049a09ba8ac3085c51ee9df24a4e5)
+- [Microsoft Authenticode digital signatures](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/authenticode)
+- [The Update Framework specification](https://theupdateframework.github.io/specification/latest/)

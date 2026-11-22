@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="An interactive COMP5578 lab on checking runtime downloads before a launcher loads them.">
+  <title>Release Integrity Lab · COMP5578</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="wrap mast-inner">
+      <a href="./" class="brand"><span class="mark" aria-hidden="true">⌁</span><span data-copy="brand">Release Integrity Lab</span></a>
+      <div class="top-right">
+        <span class="course">COMP5578 <span>·</span> OPTION 2</span>
+        <button id="language" class="quiet" type="button" lang="zh-CN" aria-label="Switch to Chinese">中文</button>
+      </div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="intro">
+      <div>
+        <p class="eyebrow" data-copy="eyebrow">NIKKE CASE STUDY / LIVE DEMO</p>
+        <h1 data-copy="heading">Verify before loading</h1>
+        <p class="lede" data-copy="lede">Try the same launcher with three different releases. Watch which files are allowed to load.</p>
+      </div>
+      <div class="schematic" aria-hidden="true">
+        <span data-copy="publish">Publish</span><i></i><span data-copy="deliver">Deliver</span><i></i><span data-copy="verify">Verify</span>
+      </div>
+    </section>
+
+    <section class="lab" aria-label="Launcher lab" data-label="labLabel">
+      <aside class="sidebar">
+        <p class="eyebrow" data-copy="scenarios">CLASSROOM SCENARIOS</p>
+        <div id="scenarios" class="scenarios" role="group" aria-label="Scenarios" data-label="scenarios"></div>
+        <p class="scenario-help" data-copy="scenarioHelp">Choose a scenario, then run the launcher. Use Next scenario to present them in order.</p>
+        <button id="next" class="quiet next" type="button" data-copy="next">Next scenario →</button>
+      </aside>
+      <div class="console">
+        <div class="console-head">
+          <div>
+            <p id="scenarioTag" class="eyebrow"></p>
+            <h2 id="scenarioTitle"></h2>
+            <p id="scenarioDescription" class="muted"></p>
+          </div>
+          <button id="run" class="primary" type="button" data-copy="run">Run launcher</button>
+        </div>
+        <ol class="steps" id="steps" aria-label="Validation stages" data-label="stages"></ol>
+        <div id="verdict" class="verdict" data-state="ready" role="status" aria-live="polite"></div>
+        <div id="signals" class="signals"></div>
+        <details class="evidence" id="evidence" hidden>
+          <summary data-copy="evidence">View verification evidence</summary>
+          <div id="evidenceBody"></div>
+        </details>
+      </div>
+    </section>
+
+    <details class="extensions">
+      <summary><span data-copy="extensions">Distribution and audit experiments</span></summary>
+      <div class="extensions-body">
+        <article>
+          <p class="eyebrow">M4</p>
+          <h3 data-copy="probeTitle">Check the CDN before launch</h3>
+          <p data-copy="probeDescription">Both simulated nodes serve the same changed files. Check each node against the trusted release while the simulated client is idle.</p>
+          <button type="button" class="secondary" id="probe" data-copy="probe">Check both nodes</button>
+          <div class="extension-result" id="probeResult" role="status"></div>
+        </article>
+        <article>
+          <p class="eyebrow">D3</p>
+          <h3 data-copy="auditTitle">Check for a missing record</h3>
+          <p data-copy="auditDescription">Compare a shortened copy with an independently retained checkpoint in the model.</p>
+          <div class="button-row">
+            <button type="button" class="secondary" id="middle" data-copy="middle">Remove middle entry</button>
+            <button type="button" class="secondary" id="tail" data-copy="tail">Remove final entry</button>
+          </div>
+          <div class="extension-result" id="auditResult" role="status"></div>
+        </article>
+      </div>
+    </details>
+    <footer>
+      <span data-copy="footer">Simulated launcher · Sample text files · Real browser signature and digest checks</span>
+      <a href="https://github.com/Cobblepot2/5578demo" data-copy="source">Source and methods ↗</a>
+    </footer>
+    <noscript>This lab requires JavaScript. 此演示需要启用 JavaScript。</noscript>
+  </main>
+</body>
+</html>

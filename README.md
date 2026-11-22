@@ -10,6 +10,12 @@ A browser demo for the COMP5578 Option 2 presentation on runtime resource integr
 
 The site opens in English. Use the **中文** button or add `?lang=zh` to switch languages. Add `?case=t3-a` or `?case=t3-b` to select a scenario directly. Expand **Distribution and audit experiments** for the M4 two-node check and D3 missing-record examples.
 
+## Inspect a local folder
+
+Open **Folder lab** (`?view=folder`). Download the sample ZIP and extract its `NIKKE-classroom-sources` folder. Choose that folder for a clean scan. Add a harmless comment to any file, save it, and select that same folder again. The report shows matching, modified, missing and added files, with both SHA-256 values where available.
+
+The archive uses four filenames cited in the incident analysis and contains classroom comments. The signed classroom manifest matches only the archived classroom bytes. For authentic clean copies, choose **Published NIKKE clean hashes**, which uses the case researcher's post-remediation fingerprints. For another release, use **My verified original folder** to record the reference in memory before comparing a second copy. File contents stay in the browser and are never evaluated. Generate a new classroom pack and its matching manifest together with `node scripts/folder-fixtures.mjs`.
+
 ## Run locally
 
 With Node.js 22 or later, run:

@@ -10,6 +10,10 @@ const supported = new Map([
   ['/integrity.js', ['integrity.js', 'text/javascript']],
   ['/fixtures.js', ['fixtures.js', 'text/javascript']],
   ['/strings.js', ['strings.js', 'text/javascript']],
+  ['/folder.js', ['folder.js', 'text/javascript']],
+  ['/folder-fixture.js', ['folder-fixture.js', 'text/javascript']],
+  ['/folder-strings.js', ['folder-strings.js', 'text/javascript']],
+  ['/nikke-source-samples.zip', ['nikke-source-samples.zip', 'application/zip']],
   ['/icon.svg', ['icon.svg', 'image/svg+xml']],
 ]);
 const port = Number(process.env.DEMO_PORT ?? 4173);

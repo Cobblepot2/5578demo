@@ -6,26 +6,34 @@ export async function digest(bytes) {
     (value) => value.toString(16).padStart(2, '0')).join('');
 }
 
-export async function checkRelease(pinnedKey, envelope, files) {
+export async function verifyManifest(pinnedKey, envelope) {
   const key = await crypto.subtle.importKey('spki', decode(pinnedKey),
     { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify']);
-  const signatureValid = await crypto.subtle.verify(
+  const valid = await crypto.subtle.verify(
     { name: 'ECDSA', hash: 'SHA-256' }, key, decode(envelope.signature), encoder.encode(envelope.payload),
   );
-  if (!signatureValid) return { signatureValid, rows: [], allowed: false };
+  return valid ? JSON.parse(envelope.payload) : null;
+}
 
-  const { files: expected } = JSON.parse(envelope.payload);
-  const rows = await Promise.all(expected.map(async ({ id, sha256 }) => {
-    const bytes = files.get(id);
-    const actual = bytes === undefined ? null : await digest(bytes);
+export async function checkRelease(pinnedKey, envelope, files) {
+  const manifest = await verifyManifest(pinnedKey, envelope);
+  if (!manifest) return { signatureValid: false, rows: [], allowed: false };
+  const received = new Map(await Promise.all([...files].map(async ([id, bytes]) => [id, await digest(bytes)])));
+  const rows = compareHashes(manifest.files, received);
+
+  return { signatureValid: true, rows, allowed: rows.every(({ state }) => state === 'match') };
+}
+
+export function compareHashes(expected, received) {
+  const rows = expected.map(({ id, sha256 }) => {
+    const actual = received.get(id) ?? null;
     return { id, expected: sha256, actual, state: actual === sha256 ? 'match' : actual ? 'mismatch' : 'missing' };
-  }));
+  });
   const listed = new Set(expected.map(({ id }) => id));
-  for (const [id, bytes] of files) {
-    if (!listed.has(id)) rows.push({ id, expected: null, actual: await digest(bytes), state: 'unlisted' });
+  for (const [id, actual] of received) {
+    if (!listed.has(id)) rows.push({ id, expected: null, actual, state: 'unlisted' });
   }
-
-  return { signatureValid, rows, allowed: rows.every(({ state }) => state === 'match') };
+  return rows;
 }
 
 export function stageFiles(files) {

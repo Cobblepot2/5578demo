@@ -15,11 +15,13 @@
       <a href="./" class="brand"><span class="mark" aria-hidden="true">⌁</span><span data-copy="brand">Release Integrity Lab</span></a>
       <div class="top-right">
         <span class="course">COMP5578 <span>·</span> OPTION 2</span>
+        <a id="viewLink" class="quiet view-link" href="?view=folder">Folder lab ↗</a>
         <button id="language" class="quiet" type="button" lang="zh-CN" aria-label="Switch to Chinese">中文</button>
       </div>
     </div>
   </header>
   <main class="wrap">
+    <div id="scenarioView">
     <section class="intro">
       <div>
         <p class="eyebrow" data-copy="eyebrow">NIKKE CASE STUDY / LIVE DEMO</p>
@@ -79,6 +81,50 @@
         </article>
       </div>
     </details>
+    </div>
+    <div id="folderView" hidden>
+      <section class="intro">
+        <div>
+          <p class="eyebrow" data-folder="eyebrow">NIKKE CASE STUDY / FOLDER LAB</p>
+          <h1 data-folder="heading">Check a source folder</h1>
+          <p class="lede" data-folder="lede">Edit files on your computer, then compare their contents with a trusted reference.</p>
+        </div>
+      </section>
+      <section class="folder-lab" aria-labelledby="folderSetup">
+        <div class="folder-steps">
+          <article>
+            <h2 id="folderSetup" data-folder="reference">1. Choose the reference</h2>
+            <label class="sr-only" for="folderMode" data-folder="reference">1. Choose the reference</label>
+            <select id="folderMode">
+              <option value="classroom" data-folder="classroom">Classroom samples (signed)</option>
+              <option value="published" data-folder="published">Published NIKKE clean hashes</option>
+              <option value="custom" data-folder="custom">My verified original folder</option>
+            </select>
+            <p id="folderModeHelp" class="muted"></p>
+            <a id="sampleArchive" class="secondary download" href="./nikke-source-samples.zip" download="nikke-source-samples.zip" data-folder="download">Download sample folder (.zip)</a>
+            <button id="pickReference" type="button" class="secondary" data-folder="pickReference" hidden>Choose original folder</button>
+            <input type="file" id="referenceInput" webkitdirectory multiple hidden>
+            <p id="referenceStatus" class="folder-status" role="status"></p>
+          </article>
+          <article>
+            <h2 data-folder="edit">2. Edit a copy</h2>
+            <p id="folderEditHelp" class="muted"></p>
+          </article>
+          <article>
+            <h2 data-folder="scan">3. Check the folder</h2>
+            <p class="muted" data-folder="scanHelp">Choose the folder again after each edit. The browser reads the current file bytes.</p>
+            <button id="pickCandidate" type="button" class="primary" data-folder="pickCandidate">Choose folder to check</button>
+            <input type="file" id="candidateInput" webkitdirectory multiple hidden>
+          </article>
+        </div>
+        <div class="folder-output">
+          <div id="folderVerdict" class="verdict" data-state="ready" role="status" aria-live="polite"></div>
+          <div id="folderReport"></div>
+          <p class="folder-footnote muted" data-folder="privacy">Files are read in your browser. Files stay on this device.</p>
+          <a class="case-reference" href="https://gist.github.com/MotherSphere/d6c049a09ba8ac3085c51ee9df24a4e5#technical-details" data-folder="caseSource">Case filenames and published clean hashes ↗</a>
+        </div>
+      </section>
+    </div>
     <footer>
       <span data-copy="footer">Simulated launcher · Sample text files · Real browser signature and digest checks</span>
       <a href="https://github.com/Cobblepot2/5578demo" data-copy="source">Source and methods ↗</a>

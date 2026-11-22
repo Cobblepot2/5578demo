@@ -1,6 +1,7 @@
 import { fixtures } from './fixtures.js';
 import { copy } from './strings.js';
 import { auditRequests, checkRelease, makeRecordChain, stageFiles, verifyRecordChain } from './integrity.js';
+import { setupFolderLab } from './folder.js';
 
 const cases = [
   { id: 'T1', envelope: fixtures.manifest, files: fixtures.files },
@@ -17,6 +18,8 @@ let runState = { status: 'ready' };
 let probeState = '';
 let auditState = '';
 let revision = 0;
+const folderView = query.get('view') === 'folder';
+const renderFolder = setupFolderLab();
 
 function node(tag, className, content) {
   const item = document.createElement(tag);
@@ -56,6 +59,16 @@ function render() {
   $('language').textContent = language === 'en' ? '中文' : 'EN';
   $('language').lang = language === 'en' ? 'zh-CN' : 'en';
   $('language').setAttribute('aria-label', words.switchLanguage);
+  $('scenarioView').hidden = folderView;
+  $('folderView').hidden = !folderView;
+  const destination = new URLSearchParams();
+  if (!folderView) destination.set('view', 'folder');
+  if (language === 'zh') destination.set('lang', 'zh');
+  $('viewLink').setAttribute('href', '?' + destination.toString());
+  $('viewLink').textContent = folderView
+    ? (language === 'zh' ? '场景演示 ↗' : 'Scenario lab ↗')
+    : (language === 'zh' ? '文件夹检测 ↗' : 'Folder lab ↗');
+  renderFolder(language);
   $('next').disabled = scenarioIndex === cases.length - 1;
   $('scenarioTag').textContent = scenario.id;
   $('scenarioTitle').textContent = info.name;

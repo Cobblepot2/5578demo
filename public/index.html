@@ -15,6 +15,7 @@
       <a href="./" class="brand"><span class="mark" aria-hidden="true">⌁</span><span data-copy="brand">Release Integrity Lab</span></a>
       <div class="top-right">
         <span class="course">COMP5578 <span>·</span> OPTION 2</span>
+        <a id="liveLink" class="quiet view-link live-link" href="?view=live">Live editor ↗</a>
         <a id="viewLink" class="quiet view-link" href="?view=folder">Folder lab ↗</a>
         <button id="language" class="quiet" type="button" lang="zh-CN" aria-label="Switch to Chinese">中文</button>
       </div>
@@ -124,6 +125,45 @@
           <a class="case-reference" href="https://gist.github.com/MotherSphere/d6c049a09ba8ac3085c51ee9df24a4e5#technical-details" data-folder="caseSource">Case filenames and published clean hashes ↗</a>
         </div>
       </section>
+    </div>
+    <div id="liveView" hidden>
+      <section class="intro">
+        <div>
+          <p class="eyebrow" data-live="eyebrow">NIKKE CASE STUDY / TWO-MINUTE DEMO</p>
+          <h1 data-live="heading">Edit, then verify</h1>
+          <p class="lede" data-live="lede">Change a file, then change the list of fingerprints. Watch what the launcher accepts.</p>
+        </div>
+      </section>
+      <section class="live-lab" aria-label="Live verification">
+        <div class="live-toolbar">
+          <button id="liveReset" type="button" class="secondary" data-live="reset">T1 · Restore original</button>
+          <button id="liveChangeFile" type="button" class="secondary" data-live="changeFile">T3-A · Edit selected file</button>
+          <button id="liveSyncManifest" type="button" class="secondary" data-live="sync">T3-B · Match manifest to files</button>
+          <button id="liveVerify" type="button" class="primary" data-live="run">Run verification</button>
+        </div>
+        <div class="live-results">
+          <div id="liveVerdict" class="verdict" data-state="ready" role="status" aria-live="polite"></div>
+          <div id="liveSignals" class="signals"></div>
+        </div>
+        <div class="live-editors">
+          <div>
+            <label for="liveFileName" data-live="fileLabel">Source file</label>
+            <select id="liveFileName"></select>
+            <label class="sr-only" for="liveFileText" data-live="fileTextLabel">Editable file contents</label>
+            <textarea id="liveFileText" spellcheck="false" autocapitalize="off" autocomplete="off" maxlength="4096"></textarea>
+          </div>
+          <div>
+            <label for="liveManifestText" data-live="manifestLabel">Release manifest</label>
+            <textarea id="liveManifestText" spellcheck="false" autocapitalize="off" autocomplete="off" maxlength="16384"></textarea>
+            <p class="muted" data-live="signatureNote">The original publisher signature stays fixed.</p>
+          </div>
+        </div>
+        <details id="liveEvidence" class="evidence live-evidence" hidden>
+          <summary data-live="evidence">See file-by-file results</summary>
+          <div id="liveEvidenceBody"></div>
+        </details>
+      </section>
+      <p class="live-note muted" data-live="note">The lab uses classroom copies named after the four case files. Your edits stay in this tab.</p>
     </div>
     <footer>
       <span data-copy="footer">Simulated launcher · Sample text files · Real browser signature and digest checks</span>

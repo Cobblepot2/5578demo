@@ -4,6 +4,10 @@ A browser demo for the COMP5578 Option 2 presentation on runtime resource integr
 
 ## Present the demo
 
+Open **Live editor** (`?view=live`) for a two-minute run. The page verifies the pristine sample on load. Click **T3-A · Edit selected file** to append a harmless comment and rerun validation. Then click **T3-B · Match manifest to files** to update the listed fingerprints while keeping the original signature. The hash-only comparison matches, but signature verification blocks loading. You can also type directly into either editor and click **Run verification**. **T1 · Restore original** resets the lab.
+
+Use the scenario lab to replay the predefined cases:
+
 1. Run **T1 / Normal release**. The publisher signature passes and all four files match.
 2. Use **Next scenario** and run **T3-A / Files changed**. The download host stays the same and the request audit reports zero alerts. Four differences block loading.
 3. Run **T3-B / Manifest replaced**. The replacement manifest matches the changed files, but its signature fails against the pinned publisher key. The launcher stops before resource comparison.

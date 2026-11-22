@@ -38,6 +38,8 @@
   .masthead .quiet { border-color: #809287; }
   .masthead .quiet:hover { background: #375349; }
   .view-link { text-decoration: none; white-space: nowrap; }
+  .masthead .live-link { border-color: var(--accent); background: var(--accent); color: var(--forest); }
+  .masthead .live-link:hover { background: #eff7c8; }
   .masthead :focus-visible { outline-color: var(--accent); }
 
   .intro { padding: clamp(24px, 3vw, 45px) 0 26px; display: flex; justify-content: space-between; align-items: end; gap: 24px; }
@@ -134,6 +136,24 @@
   .folder-output td:first-child { min-width: 135px; font-family: var(--mono); }
   .folder-footnote { margin-top: 12px; font-size: 14px; }
   .case-reference { color: var(--forest); font-size: 14px; }
+  #liveView .intro { padding-block: 24px 18px; }
+  #liveView h1 { font-size: clamp(40px,4.2vw,60px); }
+  #liveView .lede { max-width: 75ch; }
+  .live-lab { border: 1px solid var(--line); border-radius: 15px; background: var(--surface); overflow: clip; }
+  .live-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 20px; background: #e9ede3; border-bottom: 1px solid var(--line); }
+  .live-toolbar .primary { margin-inline-start: auto; min-height: 38px; padding-block: 7px; }
+  .live-results { padding: 16px 20px 12px; }
+  .live-results .verdict { min-height: 82px; }
+  .live-results .signals { margin-top: 12px; }
+  .live-editors { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 18px; padding: 0 20px 15px; }
+  .live-editors label { font-weight: 700; display: block; margin-bottom: 5px; }
+  .live-editors select, .live-editors textarea { display: block; width: 100%; border: 1px solid #a6b4a5; border-radius: 6px; color: var(--ink); background: #f5f7ef; font: 13px/1.45 var(--mono); padding: 8px 10px; }
+  .live-editors select { margin-bottom: 7px; }
+  .live-editors textarea { resize: vertical; min-height: 77px; height: clamp(108px,18vh,180px); overflow-wrap: normal; }
+  #liveManifestText { height: calc(clamp(108px,18vh,180px) + 43px); }
+  .live-editors .muted, .live-note { margin-top: 6px; font-size: 13px; }
+  .live-evidence { margin: 0 20px; padding-bottom: 12px; }
+  .live-evidence .muted { margin: 6px 0; }
   footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 7px 22px; padding: 13px 0 20px; color: var(--muted); font-size: 13px; }
   footer a { color: var(--forest); font-weight: 650; }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
@@ -151,11 +171,14 @@
     .top-right { gap: 6px; }
     .brand { font-size: 14px; }
     .masthead .quiet { padding: 6px 7px; font-size: 12px; }
+    .mast-inner { flex-wrap: wrap; padding-block: 8px; }
     .console-head { align-items: start; flex-direction: column; gap: 11px; }
     .steps { grid-template-columns: 1fr 1fr; margin-top: 15px; }
     .extensions-body { grid-template-columns: 1fr; gap: 12px; }
     .extensions-body article + article { border-left: none; border-top: 1px solid var(--line); padding: 12px 0 0; }
     .folder-steps { grid-template-columns: 1fr; }
     .folder-steps article + article { border-left: 0; border-top: 1px solid var(--line); }
+    .live-editors { grid-template-columns: 1fr; gap: 12px; padding-inline: 12px; }
+    .live-toolbar, .live-results { padding-inline: 12px; }
   }
 }

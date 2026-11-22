@@ -18,7 +18,7 @@ const envelope = {
   }),
 };
 envelope.signature = sign('sha256', Buffer.from(envelope.payload), { key: privateKey, dsaEncoding: 'ieee-p1363' }).toString('base64');
-const fixture = { publicKey: publicKey.export({ type: 'spki', format: 'der' }).toString('base64'), envelope };
+const fixture = { publicKey: publicKey.export({ type: 'spki', format: 'der' }).toString('base64'), envelope, files };
 
 // Store the exact signed bytes in a ZIP without requiring an archiving dependency.
 const local = [];

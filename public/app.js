@@ -2,6 +2,7 @@ import { fixtures } from './fixtures.js';
 import { copy } from './strings.js';
 import { auditRequests, checkRelease, makeRecordChain, stageFiles, verifyRecordChain } from './integrity.js';
 import { setupFolderLab } from './folder.js';
+import { setupLiveLab } from './live.js';
 
 const cases = [
   { id: 'T1', envelope: fixtures.manifest, files: fixtures.files },
@@ -19,7 +20,9 @@ let probeState = '';
 let auditState = '';
 let revision = 0;
 const folderView = query.get('view') === 'folder';
+const liveView = query.get('view') === 'live';
 const renderFolder = setupFolderLab();
+const renderLive = setupLiveLab(liveView);
 
 function node(tag, className, content) {
   const item = document.createElement(tag);
@@ -59,16 +62,25 @@ function render() {
   $('language').textContent = language === 'en' ? '中文' : 'EN';
   $('language').lang = language === 'en' ? 'zh-CN' : 'en';
   $('language').setAttribute('aria-label', words.switchLanguage);
-  $('scenarioView').hidden = folderView;
+  $('scenarioView').hidden = folderView || liveView;
   $('folderView').hidden = !folderView;
-  const destination = new URLSearchParams();
-  if (!folderView) destination.set('view', 'folder');
-  if (language === 'zh') destination.set('lang', 'zh');
-  $('viewLink').setAttribute('href', '?' + destination.toString());
+  $('liveView').hidden = !liveView;
+  const destination = (view) => {
+    const parameters = new URLSearchParams();
+    if (view) parameters.set('view', view);
+    if (language === 'zh') parameters.set('lang', 'zh');
+    return '?' + parameters.toString();
+  };
+  $('viewLink').setAttribute('href', destination(folderView ? '' : 'folder'));
   $('viewLink').textContent = folderView
     ? (language === 'zh' ? '场景演示 ↗' : 'Scenario lab ↗')
     : (language === 'zh' ? '文件夹检测 ↗' : 'Folder lab ↗');
+  $('liveLink').setAttribute('href', destination(liveView ? '' : 'live'));
+  $('liveLink').textContent = liveView
+    ? (language === 'zh' ? '场景演示 ↗' : 'Scenario lab ↗')
+    : (language === 'zh' ? '现场编辑 ↗' : 'Live editor ↗');
   renderFolder(language);
+  renderLive(language);
   $('next').disabled = scenarioIndex === cases.length - 1;
   $('scenarioTag').textContent = scenario.id;
   $('scenarioTitle').textContent = info.name;

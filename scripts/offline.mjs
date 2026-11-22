@@ -3,7 +3,8 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 const readAsset = (name) => readFile(new URL('../public/' + name, import.meta.url), 'utf8');
 const [html, css, icon] = await Promise.all(['index.html', 'style.css', 'icon.svg'].map(readAsset));
 const modules = await Promise.all([
-  'fixtures.js', 'integrity.js', 'strings.js', 'folder-fixture.js', 'folder-strings.js', 'folder.js', 'app.js',
+  'fixtures.js', 'integrity.js', 'strings.js', 'folder-fixture.js', 'folder-strings.js', 'folder.js',
+  'live-strings.js', 'live.js', 'app.js',
 ].map(readAsset));
 const archive = await readFile(new URL('../public/nikke-source-samples.zip', import.meta.url));
 const combined = modules

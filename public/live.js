@@ -3,7 +3,6 @@ import { folderFixture } from './folder-fixture.js';
 import { liveWords } from './live-strings.js';
 
 const liveOriginal = JSON.parse(folderFixture.envelope.payload);
-const liveMarker = '// COMP5578: classroom edit for the integrity check.';
 
 function parseLiveManifest(text) {
   const manifest = JSON.parse(text);
@@ -32,8 +31,13 @@ export function setupLiveLab(enabled) {
   const fileName = field('liveFileName');
   const source = field('liveFileText');
   const manifestEditor = field('liveManifestText');
+  const listedHash = field('liveListedHash');
+  const actualHash = field('liveActualHash');
+  const copyHash = field('liveCopyHash');
   const originalFiles = folderFixture.files;
   let files = { ...originalFiles };
+  let measured = new Map();
+  let copyNotice = '';
   let language = 'en';
   let serial = 0;
   let result = { status: 'ready' };
@@ -50,6 +54,32 @@ export function setupLiveLab(enabled) {
     option.value = id;
     return option;
   }));
+
+  function currentEntry(manifest) {
+    return Array.isArray(manifest?.files)
+      ? manifest.files.find((entry) => entry?.id === fileName.value)
+      : undefined;
+  }
+
+  function showListedHash() {
+    let entry;
+    try {
+      entry = currentEntry(JSON.parse(manifestEditor.value));
+    } catch {
+      entry = undefined;
+    }
+    listedHash.disabled = typeof entry?.sha256 !== 'string';
+    listedHash.value = listedHash.disabled ? '' : entry.sha256;
+  }
+
+  function showMeasuredHash() {
+    const fingerprint = measured.get(fileName.value) ?? '';
+    if (actualHash.value !== fingerprint) actualHash.value = fingerprint;
+    copyHash.disabled = !actualHash.value;
+    const notice = field('liveCopyStatus');
+    notice.hidden = !copyNotice;
+    notice.textContent = liveWords[language][copyNotice] ?? '';
+  }
 
   function updateResult() {
     const w = liveWords[language];
@@ -79,9 +109,8 @@ export function setupLiveLab(enabled) {
       tile.append(element('span', label), element('strong', value));
       return tile;
     }));
-    const busy = status === 'running';
-    field('liveVerify').disabled = busy;
-    field('liveSyncManifest').disabled = busy || Object.keys(files).every((id) => files[id] === originalFiles[id]);
+    field('liveVerify').disabled = status === 'running';
+    showMeasuredHash();
 
     const target = field('liveEvidenceBody');
     target.replaceChildren();
@@ -108,6 +137,7 @@ export function setupLiveLab(enabled) {
 
   async function verify() {
     const ticket = ++serial;
+    copyNotice = '';
     result = { status: 'running' };
     updateResult();
     let manifest;
@@ -125,6 +155,7 @@ export function setupLiveLab(enabled) {
       const gate = await checkRelease(folderFixture.publicKey, envelope, staged);
       const rows = gate.signatureValid ? gate.rows : compareHashes(manifest.files, await digestLiveFiles(staged));
       if (ticket !== serial) return;
+      measured = new Map(rows.filter(({ actual }) => actual !== null).map(({ id, actual }) => [id, actual]));
       result = {
         status: gate.allowed ? 'allowed' : 'blocked',
         reason: gate.signatureValid ? 'filesChanged' : 'manifestChanged', rows,
@@ -140,49 +171,59 @@ export function setupLiveLab(enabled) {
 
   function markEdited() {
     serial++;
+    copyNotice = '';
     result = { status: 'ready' };
     updateResult();
   }
 
   function restore() {
     files = { ...originalFiles };
+    measured.clear();
     fileName.selectedIndex = 0;
     source.value = files[fileName.value];
     manifestEditor.value = JSON.stringify(liveOriginal, null, 2);
+    showListedHash();
     field('liveEvidence').open = false;
     void verify();
   }
 
-  fileName.addEventListener('change', () => { source.value = files[fileName.value]; });
+  fileName.addEventListener('change', () => {
+    source.value = files[fileName.value];
+    copyNotice = '';
+    showListedHash();
+    showMeasuredHash();
+  });
   source.addEventListener('input', () => {
     files[fileName.value] = source.value;
+    measured.delete(fileName.value);
     markEdited();
   });
-  manifestEditor.addEventListener('input', markEdited);
+  manifestEditor.addEventListener('input', () => {
+    showListedHash();
+    markEdited();
+  });
+  listedHash.addEventListener('input', () => {
+    const manifest = JSON.parse(manifestEditor.value);
+    currentEntry(manifest).sha256 = listedHash.value;
+    manifestEditor.value = JSON.stringify(manifest, null, 2);
+    markEdited();
+  });
+  copyHash.addEventListener('click', async () => {
+    const value = actualHash.value;
+    try {
+      await navigator.clipboard.writeText(value);
+      if (actualHash.value !== value) return;
+      copyNotice = 'copied';
+    } catch {
+      if (actualHash.value !== value) return;
+      actualHash.focus();
+      actualHash.select();
+      copyNotice = 'selectCopy';
+    }
+    showMeasuredHash();
+  });
   field('liveReset').addEventListener('click', restore);
   field('liveVerify').addEventListener('click', verify);
-  field('liveChangeFile').addEventListener('click', () => {
-    const id = fileName.value;
-    if (!files[id].includes(liveMarker)) files[id] = files[id].slice(0, 4000) + '\n' + liveMarker + '\n';
-    source.value = files[id];
-    void verify();
-  });
-  field('liveSyncManifest').addEventListener('click', async () => {
-    const ticket = ++serial;
-    result = { status: 'running' };
-    updateResult();
-    try {
-      const hashes = await digestLiveFiles(stageFiles(files));
-      if (ticket !== serial) return;
-      const listed = [...hashes].map(([id, sha256]) => ({ id, sha256 }));
-      manifestEditor.value = JSON.stringify({ release: liveOriginal.release, files: listed }, null, 2);
-      await verify();
-    } catch {
-      if (ticket !== serial) return;
-      result = { status: 'blocked', reason: 'error' };
-      updateResult();
-    }
-  });
 
   restore();
   return (lang) => {

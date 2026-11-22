@@ -137,8 +137,7 @@
       <section class="live-lab" aria-label="Live verification">
         <div class="live-toolbar">
           <button id="liveReset" type="button" class="secondary" data-live="reset">T1 · Restore original</button>
-          <button id="liveChangeFile" type="button" class="secondary" data-live="changeFile">T3-A · Edit selected file</button>
-          <button id="liveSyncManifest" type="button" class="secondary" data-live="sync">T3-B · Match manifest to files</button>
+          <span class="live-instructions" data-live="steps">Edit file → Verify → Paste fingerprint into manifest → Verify again</span>
           <button id="liveVerify" type="button" class="primary" data-live="run">Run verification</button>
         </div>
         <div class="live-results">
@@ -147,17 +146,30 @@
         </div>
         <div class="live-editors">
           <div>
-            <label for="liveFileName" data-live="fileLabel">Source file</label>
+            <label for="liveFileName" data-live="fileLabel">T3-A · Edit a source file</label>
             <select id="liveFileName"></select>
             <label class="sr-only" for="liveFileText" data-live="fileTextLabel">Editable file contents</label>
             <textarea id="liveFileText" spellcheck="false" autocapitalize="off" autocomplete="off" maxlength="4096"></textarea>
+            <p class="muted" data-live="fileHelp">Type an extra line, then run verification.</p>
           </div>
           <div>
-            <label for="liveManifestText" data-live="manifestLabel">Release manifest</label>
-            <textarea id="liveManifestText" spellcheck="false" autocapitalize="off" autocomplete="off" maxlength="16384"></textarea>
+            <label for="liveListedHash" data-live="manifestLabel">T3-B · Edit the manifest fingerprint</label>
+            <input id="liveListedHash" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" maxlength="64" aria-describedby="liveManifestHelp">
+            <p id="liveManifestHelp" class="muted" data-live="manifestHelp">After verifying the edit, copy the current fingerprint below, paste it into the field above, and verify again.</p>
+            <label for="liveActualHash" class="live-hash-label" data-live="actualLabel">Current file fingerprint (SHA-256)</label>
+            <div class="live-hash-row">
+              <input id="liveActualHash" type="text" readonly spellcheck="false">
+              <button id="liveCopyHash" type="button" class="secondary" data-live="copyHash" disabled>Copy</button>
+            </div>
+            <p id="liveCopyStatus" class="muted" role="status" hidden></p>
             <p class="muted" data-live="signatureNote">The original publisher signature stays fixed.</p>
           </div>
         </div>
+        <details class="evidence live-evidence live-json">
+          <summary data-live="json">View or edit the full manifest JSON</summary>
+          <label class="sr-only" for="liveManifestText" data-live="json">View or edit the full manifest JSON</label>
+          <textarea id="liveManifestText" spellcheck="false" autocapitalize="off" autocomplete="off" maxlength="16384"></textarea>
+        </details>
         <details id="liveEvidence" class="evidence live-evidence" hidden>
           <summary data-live="evidence">See file-by-file results</summary>
           <div id="liveEvidenceBody"></div>

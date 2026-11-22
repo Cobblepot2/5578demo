@@ -4,7 +4,7 @@ A browser demo for the COMP5578 Option 2 presentation on runtime resource integr
 
 ## Present the demo
 
-Open **Live editor** (`?view=live`) for a two-minute run. The page verifies the pristine sample on load. Click **T3-A · Edit selected file** to append a harmless comment and rerun validation. Then click **T3-B · Match manifest to files** to update the listed fingerprints while keeping the original signature. The hash-only comparison matches, but signature verification blocks loading. You can also type directly into either editor and click **Run verification**. **T1 · Restore original** resets the lab.
+Open **Live editor** (`?view=live`) for a two-minute run. The page verifies the original sample on load. Add a line such as `// pre` to a file in the left editor and click **Run verification** for T3-A. Copy the resulting fingerprint from the read-only field, manually paste it into the manifest field above it, and run verification again for T3-B. The second comparison shows four matching fingerprints while signature verification blocks loading. The copy button only copies the value. You can inspect or edit the full manifest JSON below the editors. **T1 · Restore original** resets the lab.
 
 Use the scenario lab to replay the predefined cases:
 
